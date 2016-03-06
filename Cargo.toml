@@ -1,0 +1,10 @@
+[package]
+name = "basen"
+version = "0.1.0"
+authors = ["jmagnuson <magnu225@umn.edu>"]
+
+[lib]
+name = "basen"
+path = "src/lib.rs"
+
+[dependencies]

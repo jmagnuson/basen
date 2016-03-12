@@ -1,6 +1,7 @@
 
 use std::ops::Add;
 use std::ops::Sub;
+use std::ops::Mul;
 use std::cmp;
 
 #[derive(Debug, Eq)]
@@ -20,6 +21,30 @@ impl BaseN {
     pub fn with_existing(base: usize, vec: Vec<u8>) -> BaseN {
         BaseN { base: base, vec: vec }
     }
+    pub fn from_usize(base: usize, val: usize) -> Result<BaseN, &'static str> {
+
+        let mut new_vec:Vec<u8> = Vec::new();
+        let mut val10: usize = val;
+        loop {
+            let _val = val10 / base;
+            match _val {
+                0 => {
+                    new_vec.push(val10 as u8);
+                    break;
+                }
+                _ => {
+                    let remainder = val10 % base;
+                    println!("{}", remainder);
+                    new_vec.push(remainder as u8);
+                    val10 = _val;
+                }
+            }
+        }
+        let new_basen: BaseN = BaseN { base: base, vec: new_vec };
+
+        Ok(new_basen)
+    }
+
     pub fn to_base(self, new_base: usize) -> Result<BaseN, &'static str> {
 
         //TODO: If base is same, just return existing??
@@ -31,50 +56,18 @@ impl BaseN {
         //let new_basen = BaseN::new(new_base);
 
         println!("converting base {} to base {}", self.base, new_base);
-        let mut val10: usize = {
-            let mut _val10: usize = 0;
-            for (i, x) in self.vec.iter().enumerate() {
-                _val10 = _val10 + (*x as usize) * self.base.pow(i as u32);
-            }
-            _val10
-        };
+        let mut val10: usize = self.to_usize().unwrap();
         println!("{}", val10);
 
-        // XXX: Use existing vec, don't need new vec!
-        let len = self.vec.len();
-        let mut new_vec:Vec<u8> = Vec::with_capacity(len);
-
-        let mut carry: u8 = 0;
-
-        loop {
-            let val = val10 / new_base;
-            match val {
-                0 => {
-                    new_vec.push(val10 as u8);
-                    break;
-                }
-                _ => {
-                    let remainder = val10 % new_base;
-                    println!("{}", remainder);
-                    new_vec.push(remainder as u8);
-                    val10 = val;
-                }
-            }
-        }
-
-
-        println!("{:?}", new_vec);
-
-        let new_basen: BaseN = BaseN { base: new_base, vec: new_vec };
-
-        // TODO: Convert vec to new base
-        // if Ok(), then
-        // Ok(new_basen)
-        // else
-        // Err(BaseConversionError)
-
-        Ok(new_basen)
+        BaseN::from_usize(new_base, val10)
         
+    }
+    pub fn to_usize(&self) -> Result<usize, &'static str> {
+        let mut _val10: usize = 0;
+        for (i, x) in self.vec.iter().enumerate() {
+            _val10 = _val10 + (*x as usize) * self.base.pow(i as u32);
+        }
+        Ok(_val10)
     }
 
 }
@@ -142,3 +135,4 @@ impl Add for BaseN {
         Ok(new_basen)
     }
 }
+

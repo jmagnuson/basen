@@ -1,5 +1,3 @@
-#[test]
-fn it_works() {}
 
 pub use basen::BaseN;
 

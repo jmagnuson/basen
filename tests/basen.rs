@@ -22,6 +22,20 @@ mod test {
     }
 
     #[test]
+    fn test_from_usize() {
+
+        let val10 = 4369;
+        let new_base = 16;
+
+        let expected: BaseN = BaseN::with_existing(
+            16,
+            vec![1, 1, 1, 1]
+        );
+        
+        assert_eq!( expected, BaseN::from_usize(new_base, val10).unwrap() );
+    }
+
+    #[test]
     fn test_add_same_base() {
 
         let expected: BaseN = BaseN::with_existing(
@@ -64,5 +78,6 @@ mod test {
         //assert!(true);
         assert_eq!( expected, z );
     }
+
 
 }

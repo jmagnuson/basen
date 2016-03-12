@@ -6,8 +6,9 @@ use std::cmp;
 
 #[derive(Debug, Eq)]
 pub struct BaseN/*<T>*/{
-    base: usize, // TODO: Why isn't base u8?  Want to limit to 255 right?
-    vec: Vec</*T*/u8>
+    pub base: usize, // TODO: Why isn't base u8?  Want to limit to 255 right?
+    pub vec: Vec</*T*/u8>
+    // TODO: Make proper accessor functions for struct fields
 }
 
 impl BaseN {

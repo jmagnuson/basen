@@ -35,7 +35,7 @@ impl BaseN {
                 }
                 _ => {
                     let remainder = val10 % base;
-                    println!("{}", remainder);
+                    //println!("{}", remainder);
                     new_vec.push(remainder as u8);
                     val10 = _val;
                 }
@@ -56,9 +56,9 @@ impl BaseN {
         // TODO: Create copy, convert mutable, or both?
         //let new_basen = BaseN::new(new_base);
 
-        println!("converting base {} to base {}", self.base, new_base);
+        //println!("converting base {} to base {}", self.base, new_base);
         let mut val10: usize = self.to_usize().unwrap();
-        println!("{}", val10);
+        //println!("{}", val10);
 
         BaseN::from_usize(new_base, val10)
         

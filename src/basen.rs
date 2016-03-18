@@ -1,7 +1,8 @@
 
+
 use std::ops::Add;
 use std::ops::Sub;
-use std::ops::Mul;
+//use std::ops::Mul;
 use std::cmp;
 
 #[derive(Debug, Eq)]
@@ -13,22 +14,29 @@ pub struct BaseN/*<T>*/{
 
 impl BaseN {
 
+    // Creates new BaseN 
     pub fn new(base: usize) -> BaseN/*<T>*/ {
         BaseN { base: base, vec: Vec::new() }
     }
+
+    // Creates new BaseN with initial vector capacity
     pub fn with_capacity(base: usize, capacity: usize) -> BaseN {
         BaseN { base: base, vec: Vec::with_capacity(capacity) }
     }
+
+    // Creates new BaseN with existing base and vec
     pub fn with_existing(base: usize, vec: Vec<u8>) -> BaseN {
         BaseN { base: base, vec: vec }
     }
+
+    // Creates a new BaseN from usize value
     pub fn from_usize(base: usize, val: usize) -> Result<BaseN, &'static str> {
 
         let mut new_vec:Vec<u8> = Vec::new();
         let mut val10: usize = val;
         loop {
-            let _val = val10 / base;
-            match _val {
+            let val = val10 / base;
+            match val {
                 0 => {
                     new_vec.push(val10 as u8);
                     break;
@@ -37,7 +45,7 @@ impl BaseN {
                     let remainder = val10 % base;
                     //println!("{}", remainder);
                     new_vec.push(remainder as u8);
-                    val10 = _val;
+                    val10 = val;
                 }
             }
         }
@@ -46,29 +54,60 @@ impl BaseN {
         Ok(new_basen)
     }
 
-    pub fn to_base(self, new_base: usize) -> Result<BaseN, &'static str> {
+    // Converts existing mutable BaseN to new base
+    pub fn to_base_mut(&mut self, new_base: usize) -> Result<bool, &'static str> {
+
+        if self.base == new_base {
+            return Ok(true);
+        }
+
+        let mut val10: usize = self.to_usize().unwrap();
+
+        loop {
+            let val = val10 / new_base;
+            match val {
+                0 => {
+                    self.vec.push(val10 as u8);
+                    break;
+                }
+                _ => {
+                    let remainder = val10 % new_base;
+                    self.vec.push(remainder as u8);
+                    val10 = val;
+                }
+            }
+        }
+
+        Ok(true)
+    }
+
+
+    // Converts to a new BaseN copy
+    pub fn to_base(&self, new_base: usize) -> Result<BaseN, &'static str> {
 
         //TODO: If base is same, just return existing??
         if self.base == new_base {
-            return Ok(self);
+            return Ok(self.clone());
         }
 
         // TODO: Create copy, convert mutable, or both?
         //let new_basen = BaseN::new(new_base);
 
         //println!("converting base {} to base {}", self.base, new_base);
-        let mut val10: usize = self.to_usize().unwrap();
+        let val10: usize = self.to_usize().unwrap();
         //println!("{}", val10);
 
         BaseN::from_usize(new_base, val10)
         
     }
+
+    // Converts existing BaseN to a usize
     pub fn to_usize(&self) -> Result<usize, &'static str> {
-        let mut _val10: usize = 0;
+        let mut val10: usize = 0;
         for (i, x) in self.vec.iter().enumerate() {
-            _val10 = _val10 + (*x as usize) * self.base.pow(i as u32);
+            val10 = val10 + (*x as usize) * self.base.pow(i as u32);
         }
-        Ok(_val10)
+        Ok(val10)
     }
 
 }
@@ -98,13 +137,14 @@ impl Add for BaseN {
 
     // Option<> because might overflow, bases incorrect, etc.
     // I suppose you could add a base16 to base10 with an internal convert
-    fn add(self, _rhs: BaseN) -> Result<BaseN, &'static str> {
+    fn add(self, rhs: BaseN) -> Result<BaseN, &'static str> {
 
-        let add_basen = match _rhs.base==self.base {
-            true => _rhs,//.clone(),
-            false => _rhs.to_base(self.base).unwrap()
-                // TODO: Throw error?  Don't actually know 
-                // what base user wanted to end with
+        let add_basen = if rhs.base==self.base {
+            rhs
+        } else { 
+            rhs.to_base(self.base).unwrap()
+            // TODO: Throw error?  Don't actually know 
+            // what base user wanted to end with
         };
 
         // TODO: Use zip() w/ carry array instead?
@@ -132,6 +172,51 @@ impl Add for BaseN {
         }
 
         let new_basen: BaseN = BaseN { base: add_basen.base, vec: new_vec };
+
+        Ok(new_basen)
+    }
+}
+
+impl Sub for BaseN {
+    type Output = Result<BaseN, &'static str>;
+
+    // Option<> because might overflow, bases incorrect, etc.
+    // I suppose you could add a base16 to base10 with an internal convert
+    fn sub(self, rhs: BaseN) -> Result<BaseN, &'static str> {
+
+        let sub_basen = if rhs.base==self.base {
+            rhs
+        } else { 
+            rhs.to_base(self.base).unwrap()
+            // TODO: Throw error?  Don't actually know 
+            // what base user wanted to end with
+        };
+
+        let max = cmp::max(self.vec.len(), sub_basen.vec.len());
+        let mut new_vec: Vec<u8> = Vec::with_capacity(max);
+
+        let mut borrow: u8 = 0;
+
+        for i in 0..max {
+            match (self.vec.get(i), sub_basen.vec.get(i)) {
+                (Some(x), Some(y)) => {
+                    let mut diff: i8 = (*x as i8) - (*y as i8) - (borrow as i8);
+                    borrow = if diff < 0 { 
+                        diff += self.base as i8; 1 } else { 0 };
+                    new_vec.push(diff as u8);
+                },
+                (Some(x), None) => {
+                    let mut diff: i8 = (*x as i8) - (borrow as i8);
+                    borrow = if diff < 0 { 
+                        diff += self.base as i8; 1 } else { 0 };
+                    new_vec.push(diff as u8);
+                },
+                (_, _) => break // no ops needed
+
+            }
+        }
+
+        let new_basen: BaseN = BaseN { base: sub_basen.base, vec: new_vec };
 
         Ok(new_basen)
     }

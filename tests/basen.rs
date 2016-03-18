@@ -79,5 +79,48 @@ mod test {
         assert_eq!( expected, z );
     }
 
+    #[test]
+    fn test_sub_same_base() {
+
+        let x: BaseN = BaseN::with_existing(
+            10,
+            vec![3, 3, 3, 3]
+        );
+        let y: BaseN = BaseN::with_existing(
+            10,
+            vec![1, 1, 1, 1]
+        );
+        let expected: BaseN = BaseN::with_existing(
+            10,
+            vec![2, 2, 2, 2]
+        );
+        
+        let z: BaseN = (x - y).unwrap();
+
+        //assert!(true);
+        assert_eq!( expected, z );
+    }
+
+    #[test]
+    fn test_sub_different_base() {
+
+        let x: BaseN = BaseN::with_existing(
+            16,
+            vec![15, 11, 9, 1]
+        );
+        let expected: BaseN = BaseN::with_existing(
+            16,
+            vec![1, 1, 1, 1]
+        );
+        let y: BaseN = BaseN::with_existing(
+            10,
+            vec![2, 2, 2, 2]
+        );
+        
+        let z: BaseN = (x - y.to_base(16).unwrap()).unwrap();
+
+        //assert!(true);
+        assert_eq!( expected, z );
+    }
 
 }

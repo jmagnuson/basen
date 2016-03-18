@@ -8,3 +8,10 @@ name = "basen"
 path = "src/lib.rs"
 
 [dependencies]
+
+#[dev-dependencies]
+clippy = {version = "~0.0.51", optional = true}
+
+[features]
+default = []
+dev = ["clippy"]

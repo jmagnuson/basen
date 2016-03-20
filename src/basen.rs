@@ -6,30 +6,29 @@ use std::ops::Sub;
 use std::cmp;
 
 #[derive(Debug, Eq)]
-pub struct BaseN/*<T>*/{
-    pub base: usize, // TODO: Why isn't base u8?  Want to limit to 255 right?
-    pub vec: Vec</*T*/u8>
-    // TODO: Make proper accessor functions for struct fields
+pub struct BaseN {
+    pub base: usize,
+    pub vec: Vec<u8>
 }
 
 impl BaseN {
 
-    // Creates new BaseN 
+    /// Creates new BaseN 
     pub fn new(base: usize) -> BaseN/*<T>*/ {
         BaseN { base: base, vec: Vec::new() }
     }
 
-    // Creates new BaseN with initial vector capacity
+    /// Creates new BaseN with initial vector capacity
     pub fn with_capacity(base: usize, capacity: usize) -> BaseN {
         BaseN { base: base, vec: Vec::with_capacity(capacity) }
     }
 
-    // Creates new BaseN with existing base and vec
+    /// Creates new BaseN with existing base and vec
     pub fn with_existing(base: usize, vec: Vec<u8>) -> BaseN {
         BaseN { base: base, vec: vec }
     }
 
-    // Creates a new BaseN from usize value
+    /// Creates a new BaseN from usize value
     pub fn from_usize(base: usize, val: usize) -> Result<BaseN, &'static str> {
 
         let mut new_vec:Vec<u8> = Vec::new();
@@ -54,7 +53,7 @@ impl BaseN {
         Ok(new_basen)
     }
 
-    // Converts existing mutable BaseN to new base
+    /// Converts existing mutable BaseN to new base
     pub fn to_base_mut(&mut self, new_base: usize) -> Result<bool, &'static str> {
 
         if self.base == new_base {
@@ -82,7 +81,7 @@ impl BaseN {
     }
 
 
-    // Converts to a new BaseN copy
+    /// Converts to a new BaseN copy
     pub fn to_base(&self, new_base: usize) -> Result<BaseN, &'static str> {
 
         //TODO: If base is same, just return existing??
@@ -101,7 +100,7 @@ impl BaseN {
         
     }
 
-    // Converts existing BaseN to a usize
+    /// Converts existing BaseN to a usize
     pub fn to_usize(&self) -> Result<usize, &'static str> {
         let mut val10: usize = 0;
         for (i, x) in self.vec.iter().enumerate() {

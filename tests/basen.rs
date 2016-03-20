@@ -123,4 +123,67 @@ mod test {
         assert_eq!( expected, z );
     }
 
+    #[test]
+    fn test_eq_same_base() {
+
+        let x: BaseN = BaseN::with_existing(
+            16,
+            vec![3, 3, 3, 3]
+        );
+        let y: BaseN = BaseN::with_existing(
+            16,
+            vec![3, 3, 3, 3]
+        );
+
+        assert_eq!( x==y, true );
+    }
+
+    #[test]
+    fn test_eq_different_base() {
+
+        let x: BaseN = BaseN::with_existing(
+            10,
+            vec![3, 3, 3, 3]
+        );
+        let y: BaseN = BaseN::with_existing(
+            16,
+            vec![5, 0, 13]
+        );
+
+        assert_eq!( x==y, true );
+
+    }
+
+    #[test]
+    fn test_ne_same_base() {
+
+        let x: BaseN = BaseN::with_existing(
+            16,
+            vec![3, 3, 3, 3]
+        );
+        let y: BaseN = BaseN::with_existing(
+            16,
+            vec![4, 4, 4, 4]
+        );
+
+        assert_eq!( x!=y, true );
+    }
+
+    #[test]
+    fn test_ne_different_base() {
+
+        let x: BaseN = BaseN::with_existing(
+            10,
+            vec![3, 3, 3, 3]
+        );
+        let y: BaseN = BaseN::with_existing(
+            16,
+            vec![6, 1, 14]
+        );
+
+        assert_eq!( x!=y, true );
+
+    }
+
+
 }

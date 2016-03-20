@@ -115,8 +115,12 @@ impl BaseN {
 
 impl PartialEq for BaseN {
     fn eq(&self, other: &BaseN) -> bool {
-        (self.vec == other.vec)
-            && (self.base == other.base)
+        if self.base == other.base {
+            (self.vec == other.vec)
+        } else {
+            self.vec == other.to_base(self.base).unwrap().vec
+
+        }
     }
 }
 

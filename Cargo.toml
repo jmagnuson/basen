@@ -2,6 +2,7 @@
 name = "basen"
 version = "0.1.0"
 authors = ["jmagnuson <magnu225@umn.edu>"]
+license = "MIT"
 
 [lib]
 name = "basen"

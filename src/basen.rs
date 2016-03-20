@@ -13,22 +13,22 @@ pub struct BaseN {
 
 impl BaseN {
 
-    /// Creates new BaseN 
-    pub fn new(base: usize) -> BaseN/*<T>*/ {
+    /// Creates new number given a base
+    pub fn new(base: usize) -> BaseN {
         BaseN { base: base, vec: Vec::new() }
     }
 
-    /// Creates new BaseN with initial vector capacity
+    /// Creates new number with initial vector capacity
     pub fn with_capacity(base: usize, capacity: usize) -> BaseN {
         BaseN { base: base, vec: Vec::with_capacity(capacity) }
     }
 
-    /// Creates new BaseN with existing base and vec
+    /// Creates new number with existing base and vec
     pub fn with_existing(base: usize, vec: Vec<u8>) -> BaseN {
         BaseN { base: base, vec: vec }
     }
 
-    /// Creates a new BaseN from usize value
+    /// Creates a new number from base and usize value
     pub fn from_usize(base: usize, val: usize) -> Result<BaseN, &'static str> {
 
         let mut new_vec:Vec<u8> = Vec::new();
@@ -53,7 +53,7 @@ impl BaseN {
         Ok(new_basen)
     }
 
-    /// Converts existing mutable BaseN to new base
+    /// Converts existing number to new base
     pub fn to_base_mut(&mut self, new_base: usize) -> Result<bool, &'static str> {
 
         if self.base == new_base {
@@ -81,7 +81,7 @@ impl BaseN {
     }
 
 
-    /// Converts to a new BaseN copy
+    /// Converts to a new base copy
     pub fn to_base(&self, new_base: usize) -> Result<BaseN, &'static str> {
 
         //TODO: If base is same, just return existing??

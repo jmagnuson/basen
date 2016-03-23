@@ -1,7 +1,7 @@
 BaseN
 =====
 
-A toy calculator for arbitrary base arithmetic.
+A toy numeric type for arbitrary base arithmetic.
 
 ## TODO
 

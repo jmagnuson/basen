@@ -2,10 +2,9 @@
 
 use std::ops::Add;
 use std::ops::Sub;
-//use std::ops::Mul;
 use std::cmp;
 
-#[derive(Debug, Eq)]
+#[derive(Debug, Eq, Clone)]
 pub struct BaseN {
     pub base: usize,
     pub vec: Vec<u8>
@@ -42,7 +41,6 @@ impl BaseN {
                 }
                 _ => {
                     let remainder = val10 % base;
-                    //println!("{}", remainder);
                     new_vec.push(remainder as u8);
                     val10 = val;
                 }
@@ -94,7 +92,6 @@ impl BaseN {
 
         //println!("converting base {} to base {}", self.base, new_base);
         let val10: usize = self.to_usize().unwrap();
-        //println!("{}", val10);
 
         BaseN::from_usize(new_base, val10)
         
@@ -111,8 +108,6 @@ impl BaseN {
 
 }
 
-//impl Copy for BaseN { }
-
 impl PartialEq for BaseN {
     fn eq(&self, other: &BaseN) -> bool {
         if self.base == other.base {
@@ -121,17 +116,6 @@ impl PartialEq for BaseN {
             self.vec == other.to_base(self.base).unwrap().vec
 
         }
-    }
-}
-
-impl Clone for BaseN {
-    fn clone(&self) -> Self {
-        BaseN { base: self.base, vec: self.vec.clone() }
-    }
-
-    fn clone_from(&mut self, source: &Self) {
-        self.vec.clone_from(&source.vec);
-        self.base = source.base;
     }
 }
 

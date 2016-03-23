@@ -7,7 +7,7 @@ mod test {
     use basen::BaseN;
 
     #[test]
-    fn test_convert_base() {
+    fn test_to_base() {
 
         let expected: BaseN = BaseN::with_existing(
             10,
@@ -19,6 +19,23 @@ mod test {
         );
         
         assert_eq!( expected, x.to_base(10).unwrap() );
+    }
+
+    #[test]
+    fn test_set_base() {
+
+        let expected: BaseN = BaseN::with_existing(
+            10,
+            vec![9, 6, 3, 4]
+        );
+        let mut x: BaseN = BaseN::with_existing(
+            16,
+            vec![1, 1, 1, 1]
+        );
+
+        x.set_base(10);
+
+        assert_eq!( expected, x );
     }
 
     #[test]

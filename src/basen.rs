@@ -52,13 +52,16 @@ impl BaseN {
     }
 
     /// Converts existing number to new base
-    pub fn to_base_mut(&mut self, new_base: usize) -> Result<bool, &'static str> {
+    pub fn set_base(&mut self, new_base: usize) -> Result<bool, &'static str> {
 
         if self.base == new_base {
             return Ok(true);
         }
 
         let mut val10: usize = self.to_usize().unwrap();
+
+        self.base = new_base;
+        self.vec.clear();
 
         loop {
             let val = val10 / new_base;
@@ -88,9 +91,7 @@ impl BaseN {
         }
 
         // TODO: Create copy, convert mutable, or both?
-        //let new_basen = BaseN::new(new_base);
 
-        //println!("converting base {} to base {}", self.base, new_base);
         let val10: usize = self.to_usize().unwrap();
 
         BaseN::from_usize(new_base, val10)

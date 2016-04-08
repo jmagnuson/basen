@@ -2,6 +2,7 @@
 
 use std::ops::Add;
 use std::ops::Sub;
+use std::ops::Mul;
 use std::cmp;
 
 #[derive(Debug, Eq, Clone)]
@@ -207,6 +208,15 @@ impl Sub for BaseN {
         let new_basen: BaseN = BaseN { base: sub_basen.base, vec: new_vec };
 
         Ok(new_basen)
+    }
+}
+
+impl Mul for BaseN {
+    type Output = Result<BaseN, &'static str>;
+
+    fn mul(self, rhs: BaseN) -> Result<BaseN, &'static str> {
+        // XXX: convert to usize for now
+        BaseN::from_usize(self.base, self.to_usize().unwrap() * rhs.to_usize().unwrap())
     }
 }
 

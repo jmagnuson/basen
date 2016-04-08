@@ -3,6 +3,7 @@
 use std::ops::Add;
 use std::ops::Sub;
 use std::ops::Mul;
+use std::ops::Div;
 use std::cmp;
 
 #[derive(Debug, Eq, Clone)]
@@ -220,3 +221,11 @@ impl Mul for BaseN {
     }
 }
 
+impl Div for BaseN {
+    type Output = Result<BaseN, &'static str>;
+
+    fn div(self, rhs: BaseN) -> Result<BaseN, &'static str> {
+        // XXX: convert to usize for now
+        BaseN::from_usize(self.base, self.to_usize().unwrap() / rhs.to_usize().unwrap())
+    }
+}

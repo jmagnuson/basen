@@ -284,5 +284,36 @@ mod test {
 
     }
 
+    #[test]
+    fn test_gt_same_base() {
+
+        let x: BaseN = BaseN::with_existing(
+            16,
+            vec![3, 3, 3, 3]
+        );
+        let y: BaseN = BaseN::with_existing(
+            16,
+            vec![4, 4, 4, 4]
+        );
+
+        assert_eq!( x>y, false );
+    }
+
+    #[test]
+    fn test_gt_different_base() {
+
+        let x: BaseN = BaseN::with_existing(
+            10,
+            vec![3, 3, 3, 3]
+        );
+        let y: BaseN = BaseN::with_existing(
+            16,
+            vec![6, 1, 14]
+        );
+
+        assert_eq!( x>y, false );
+
+    }
+
 
 }

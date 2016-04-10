@@ -5,6 +5,7 @@ use std::ops::Sub;
 use std::ops::Mul;
 use std::ops::Div;
 use std::cmp;
+use std::cmp::Ordering;
 
 #[derive(Debug, Eq, Clone)]
 pub struct BaseN {
@@ -14,22 +15,22 @@ pub struct BaseN {
 
 impl BaseN {
 
-    /// Creates new number given a base
+    /// Creates new number given a base.
     pub fn new(base: usize) -> BaseN {
         BaseN { base: base, vec: Vec::new() }
     }
 
-    /// Creates new number with initial vector capacity
+    /// Creates new number with initial vector capacity.
     pub fn with_capacity(base: usize, capacity: usize) -> BaseN {
         BaseN { base: base, vec: Vec::with_capacity(capacity) }
     }
 
-    /// Creates new number with existing base and vec
+    /// Creates new number with existing base and vec.
     pub fn with_existing(base: usize, vec: Vec<u8>) -> BaseN {
         BaseN { base: base, vec: vec }
     }
 
-    /// Creates a new number from base and usize value
+    /// Creates a new number from base and usize value.
     pub fn from_usize(base: usize, val: usize) -> Result<BaseN, &'static str> {
 
         let mut new_vec:Vec<u8> = Vec::new();
@@ -53,7 +54,7 @@ impl BaseN {
         Ok(new_basen)
     }
 
-    /// Converts existing number to new base
+    /// Converts existing number to new base.
     pub fn set_base(&mut self, new_base: usize) -> Result<bool, &'static str> {
 
         if self.base == new_base {
@@ -84,7 +85,7 @@ impl BaseN {
     }
 
 
-    /// Converts to a new base copy
+    /// Converts to a new base copy.
     pub fn to_base(&self, new_base: usize) -> Result<BaseN, &'static str> {
 
         //TODO: If base is same, just return existing??
@@ -100,7 +101,7 @@ impl BaseN {
         
     }
 
-    /// Converts existing BaseN to a usize
+    /// Converts existing BaseN to a usize.
     pub fn to_usize(&self) -> Result<usize, &'static str> {
         let mut val10: usize = 0;
         for (i, x) in self.vec.iter().enumerate() {
@@ -112,13 +113,30 @@ impl BaseN {
 }
 
 impl PartialEq for BaseN {
+
+    /// Compares partial equivalence between the values of arbitrary bases.
     fn eq(&self, other: &BaseN) -> bool {
         if self.base == other.base {
             (self.vec == other.vec)
         } else {
             self.vec == other.to_base(self.base).unwrap().vec
-
         }
+    }
+}
+
+impl PartialOrd for BaseN {
+
+    /// Compares partial order between the values of arbitrary bases.
+    fn partial_cmp(&self, other: &BaseN) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for BaseN {
+
+    /// Compares total order between the values of arbitrary bases.
+    fn cmp(&self, other: &BaseN) -> Ordering {
+        self.to_usize().unwrap().cmp(&other.to_usize().unwrap())
     }
 }
 

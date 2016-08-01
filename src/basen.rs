@@ -140,7 +140,7 @@ impl Ord for BaseN {
     }
 }
 
-impl Add for BaseN {
+impl Add<BaseN> for BaseN {
     type Output = Result<BaseN, &'static str>;
 
     // Option<> because might overflow, bases incorrect, etc.
@@ -182,6 +182,14 @@ impl Add for BaseN {
         let new_basen: BaseN = BaseN { base: add_basen.base, vec: new_vec };
 
         Ok(new_basen)
+    }
+}
+
+impl Add<usize> for BaseN {
+    type Output = Result<BaseN, &'static str>;
+
+    fn add(self, rhs: usize) -> Result<BaseN, &'static str> {
+        BaseN::from_usize(self.base, self.to_usize().unwrap() + rhs)
     }
 }
 

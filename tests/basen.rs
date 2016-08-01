@@ -33,7 +33,7 @@ mod test {
             vec![1, 1, 1, 1]
         );
 
-        x.set_base(10);
+        x.set_base(10).unwrap();
 
         assert_eq!( expected, x );
     }
@@ -75,6 +75,24 @@ mod test {
     }
 
     #[test]
+    fn test_add_with_usize() {
+
+        let expected: BaseN = BaseN::with_existing(
+            16,
+            vec![15, 11, 9, 1]
+        );
+        let x: BaseN = BaseN::with_existing(
+            16,
+            vec![1, 1, 1, 1]
+        );
+        let y: usize = 2222;
+
+        let z: BaseN = (x + y).unwrap();
+
+        assert_eq!( expected, z );
+    }
+
+    #[test]
     fn test_add_different_base() {
 
         let expected: BaseN = BaseN::with_existing(
@@ -90,7 +108,7 @@ mod test {
             vec![2, 2, 2, 2]
         );
         
-        let z: BaseN = (x + y.to_base(16).unwrap()).unwrap();
+        let z: BaseN = (x + y).unwrap();
 
         //assert!(true);
         assert_eq!( expected, z );
